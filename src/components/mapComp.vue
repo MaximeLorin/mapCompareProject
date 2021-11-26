@@ -2,14 +2,16 @@
   <div class="mapsContainer">
     <div class="mapsContainer__indiv">
       <GMapAutocomplete
-        placeholder="This is a placeholder"
-        @place_changed="setPlace"
+        placeholder="Enter a place"
+        @place_changed="setPlace2"
+        :options="{ fields: ['geometry'] }"
       >
       </GMapAutocomplete>
       <GMapMap
-        :center="{ lat: 51.093048, lng: 6.84212 }"
+        :center="{ lat: this.lat2, lng: this.lng2 }"
         :zoom="12"
         :options="{
+          mapTypeId: 'hybrid',
           zoomControl: true,
           mapTypeControl: true,
           scaleControl: true,
@@ -21,14 +23,16 @@
     </div>
     <div class="mapsContainer__indiv">
       <GMapAutocomplete
-        placeholder="This is a placeholder"
+        placeholder="Enter a place"
         @place_changed="setPlace"
+        :options="{ fields: ['geometry'] }"
       >
       </GMapAutocomplete>
       <GMapMap
         :center="{ lat: this.lat, lng: this.lng }"
         :zoom="12"
         :options="{
+          mapTypeId: 'hybrid',
           zoomControl: true,
           mapTypeControl: true,
           scaleControl: true,
@@ -48,11 +52,43 @@ export default {
     return {
       lat: 48.117266,
       lng: -1.6777926,
+      lat2: 48.117266,
+      lng2: -1.6777926,
       type: "",
       radius: "",
-      placeChange: "",
+      currentPlace: null,
+      currentPlace2: null,
       places: [],
     };
+  },
+
+  methods: {
+    setPlace(place) {
+      this.currentPlace = place;
+      if (this.currentPlace) {
+        const coords = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng(),
+        };
+        this.places.push(this.currentPlace);
+        this.lat = coords.lat;
+        this.lng = coords.lng;
+        this.currentPlace = null;
+      }
+    },
+    setPlace2(place2) {
+      this.currentPlace2 = place2;
+      if (this.currentPlace2) {
+        const coords2 = {
+          lat: this.currentPlace2.geometry.location.lat(),
+          lng: this.currentPlace2.geometry.location.lng(),
+        };
+        this.places.push(this.currentPlace2);
+        this.lat2 = coords2.lat;
+        this.lng2 = coords2.lng;
+        this.currentPlace2 = null;
+      }
+    },
   },
 };
 </script>
@@ -66,7 +102,7 @@ export default {
   }
 }
 .vue-map-container {
-  width: 100;
-  height: 600px;
+  width: 100%;
+  height: 80vh;
 }
 </style>
