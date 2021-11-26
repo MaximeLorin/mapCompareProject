@@ -5,7 +5,12 @@
     <h1>Votre Position</h1>
     <h2>Lattitude: {{ lat.toFixed(2) }}</h2>
     <h2>Longitude: {{ lng.toFixed(2) }}</h2>
-    <input ref="autocomplete" type="text" placeholder="Entrez un lieu" />
+    <input
+      ref="autocomplete"
+      type="text"
+      placeholder="Entrez un lieu"
+      v-model="place"
+    />
     <div ref="mapDiv" style="width: 100%; height: 80vh"></div>
   </div>
 </template>
@@ -30,6 +35,7 @@ export default {
       lng: 0,
       type: "",
       radius: "",
+      place: "",
       places: [],
     };
   },
@@ -37,7 +43,7 @@ export default {
     try {
       const loader = new Loader({ apiKey: GOOGLE_MAPS_API_KEY });
       await loader.load();
-      this.drawMap();
+      this.brainMap();
     } catch (err) {
       console.log(err);
     }
@@ -48,12 +54,30 @@ export default {
     },
   },
   methods: {
-    drawMap() {
+    brainMap() {
       new google.maps.Map(this.$refs.mapDiv, {
-        center: { lat: -33.8688, lng: 151.2195 },
+        center: { lat: 48.117266, lng: -1.6777926 },
         zoom: 13,
-        mapTypeId: "roadmap",
+        mapTypeId: "hybrid",
       });
+
+      // const request = {
+      //   query: this.place,
+      //   fields: ["name", "geometry"],
+      // };
+
+      // let service = new google.maps.places.PlacesService(
+      //   this.$refs.autocomplete
+      // );
+
+      // service.findPlaceFromQuery(request, (results, status) => {
+      //   if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+      //     for (let i = 0; i < results.length; i++) {
+      //       createMarker(results[i]);
+      //     }
+      //     map.setCenter(results[0].geometry.location);
+      //   }
+      // });
     },
   },
 };
