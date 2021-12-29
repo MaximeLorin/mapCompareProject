@@ -1,5 +1,6 @@
 <template>
   <div class="mapsContainer">
+    <input type="range" min="1" max="22" class="slider" v-model="this.zoom" />
     <div class="mapsContainer__indiv">
       <GMapAutocomplete
         placeholder="Enter a place"
@@ -9,7 +10,7 @@
       </GMapAutocomplete>
       <GMapMap
         :center="{ lat: this.lat2, lng: this.lng2 }"
-        :zoom="12"
+        :zoom="this.changeZoom"
         :options="{
           mapTypeId: 'hybrid',
           zoomControl: true,
@@ -30,7 +31,7 @@
       </GMapAutocomplete>
       <GMapMap
         :center="{ lat: this.lat, lng: this.lng }"
-        :zoom="12"
+        :zoom="this.changeZoom"
         :options="{
           mapTypeId: 'hybrid',
           zoomControl: true,
@@ -59,9 +60,16 @@ export default {
       currentPlace: null,
       currentPlace2: null,
       places: [],
+      zoom: 12,
     };
   },
-
+  computed: {
+    changeZoom: function () {
+      const actualZoom = parseInt(this.zoom);
+      console.log(actualZoom);
+      return actualZoom;
+    },
+  },
   methods: {
     setPlace(place) {
       this.currentPlace = place;
@@ -73,6 +81,7 @@ export default {
         this.places.push(this.currentPlace);
         this.lat = coords.lat;
         this.lng = coords.lng;
+        console.log(this.currentPlace);
         this.currentPlace = null;
       }
     },
